@@ -156,9 +156,12 @@
         #camera-feed {
             width: 100%;
             max-width: 300px;
+            height: 225px;
             border-radius: 10px;
             border: 2px solid #e9ecef;
             margin-bottom: 15px;
+            background: #f0f0f0;
+            object-fit: cover;
         }
         
         .stress-indicator {
@@ -219,7 +222,8 @@
             
             <div class="camera-section">
                 <h3>📹 Stress Monitor</h3>
-                <img id="camera-feed" src="/video_feed" alt="Camera feed for stress analysis">
+                <video id="camera-feed" autoplay muted playsinline></video>
+                <canvas id="capture-canvas" style="display: none;"></canvas>
                 
                 <div class="stress-indicator">
                     <div>Current Stress Level:</div>
@@ -245,13 +249,112 @@
             originalText: '',
             testActive: false,
             keystrokes: 0,
-            errors: 0
+            errors: 0,
+            sessionId: null
         };
 
         let updateInterval;
+        let stressAnalysisInterval;
+        let videoStream = null;
+        let canvas = null;
+        let context = null;
+
+        // Initialize webcam and canvas
+        async function initializeWebcam() {
+            try {
+                const video = document.getElementById('camera-feed');
+                canvas = document.getElementById('capture-canvas');
+                context = canvas.getContext('2d');
+                
+                // Request webcam access
+                videoStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 300, height: 225, facingMode: 'user' },
+                    audio: false
+                });
+                
+                video.srcObject = videoStream;
+                canvas.width = 300;
+                canvas.height = 225;
+                
+                return true;
+            } catch (error) {
+                console.error('Error accessing webcam:', error);
+                document.getElementById('stress-display').textContent = 'Camera Access Denied';
+                return false;
+            }
+        }
+
+        // Capture frame from video and send for analysis
+        async function captureAndAnalyzeFrame() {
+            if (!canvas || !context || !videoStream) return;
+            
+            try {
+                const video = document.getElementById('camera-feed');
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    // Draw current frame to canvas
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    
+                    // Convert canvas to base64 image
+                    const imageData = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    // Send frame for stress analysis
+                    const response = await fetch('/analyze_frame', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            image: imageData,
+                            session_id: testData.sessionId
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        updateStressDisplay(result.stress_level);
+                    }
+                }
+            } catch (error) {
+                console.error('Error analyzing frame:', error);
+            }
+        }
+
+        // Update stress level display with color coding
+        function updateStressDisplay(stressLevel) {
+            const stressDisplay = document.getElementById('stress-display');
+            stressDisplay.textContent = stressLevel;
+            
+            // Color code based on stress level
+            stressDisplay.className = 'stress-level';
+            switch (stressLevel.toLowerCase()) {
+                case 'tense':
+                    stressDisplay.style.color = '#dc3545'; // Red
+                    break;
+                case 'focused':
+                    stressDisplay.style.color = '#ffc107'; // Yellow
+                    break;
+                case 'happy':
+                    stressDisplay.style.color = '#28a745'; // Green
+                    break;
+                case 'normal':
+                    stressDisplay.style.color = '#28a745'; // Green
+                    break;
+                default:
+                    stressDisplay.style.color = '#6c757d'; // Gray
+            }
+        }
 
         async function startTest() {
             try {
+                // Initialize webcam if not already done
+                if (!videoStream) {
+                    const webcamInitialized = await initializeWebcam();
+                    if (!webcamInitialized) {
+                        alert('Webcam access is required for stress analysis. Please allow camera access and try again.');
+                        return;
+                    }
+                }
+                
                 const response = await fetch('/get_paragraph');
                 const data = await response.json();
                 
@@ -263,6 +366,8 @@
                 input.value = '';
                 input.focus();
                 
+                // Generate session ID for tracking stress data
+                testData.sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                 testData.startTime = Date.now();
                 testData.testActive = true;
                 testData.keystrokes = 0;
@@ -272,8 +377,15 @@
                 document.getElementById('finish-btn').disabled = false;
                 document.getElementById('new-paragraph-btn').disabled = false;
                 
-                updateInterval = setInterval(updateStats, 100);
+                // Clear any existing intervals
+                if (updateInterval) clearInterval(updateInterval);
+                if (stressAnalysisInterval) clearInterval(stressAnalysisInterval);
                 
+                updateInterval = setInterval(updateStats, 100);
+                stressAnalysisInterval = setInterval(captureAndAnalyzeFrame, 2000); // Analyze every 2 seconds
+                
+                // Remove previous event listeners to avoid duplicates
+                input.removeEventListener('input', trackTyping);
                 input.addEventListener('input', trackTyping);
                 
             } catch (error) {
@@ -296,9 +408,10 @@
             const elapsed = (currentTime - testData.startTime) / 1000;
             const typedText = document.getElementById('typing-input').value;
             
-            // Calculate WPM
-            const wordsTyped = typedText.trim().split(/\s+/).length;
-            const wpm = elapsed > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
+            // Calculate WPM - fix empty string bug
+            const trimmedText = typedText.trim();
+            const wordsTyped = trimmedText.length > 0 ? trimmedText.split(/\s+/).length : 0;
+            const wpm = elapsed > 0 && wordsTyped > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
             
             // Calculate accuracy
             let correctChars = 0;
@@ -323,11 +436,13 @@
             
             testData.testActive = false;
             clearInterval(updateInterval);
+            if (stressAnalysisInterval) clearInterval(stressAnalysisInterval);
             
             const typedText = document.getElementById('typing-input').value;
             const elapsed = (Date.now() - testData.startTime) / 1000;
-            const wordsTyped = typedText.trim().split(/\s+/).length;
-            const wpm = elapsed > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
+            const trimmedText = typedText.trim();
+            const wordsTyped = trimmedText.length > 0 ? trimmedText.split(/\s+/).length : 0;
+            const wpm = elapsed > 0 && wordsTyped > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
             
             let correctChars = 0;
             const minLength = Math.min(typedText.length, testData.originalText.length);
@@ -349,7 +464,8 @@
                     body: JSON.stringify({
                         wpm: wpm,
                         accuracy: accuracy,
-                        typing_time: elapsed
+                        typing_time: elapsed,
+                        session_id: testData.sessionId
                     })
                 });
                 
@@ -367,13 +483,25 @@
             }
         }
 
+        // Cleanup function to stop all intervals and reset state
+        function cleanup() {
+            testData.testActive = false;
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+            if (stressAnalysisInterval) {
+                clearInterval(stressAnalysisInterval);
+                stressAnalysisInterval = null;
+            }
+        }
+
         async function newParagraph() {
             if (testData.testActive) {
                 if (!confirm('This will start a new test. Continue?')) return;
             }
             
-            testData.testActive = false;
-            clearInterval(updateInterval);
+            cleanup();
             
             document.getElementById('start-btn').disabled = false;
             document.getElementById('finish-btn').disabled = true;
@@ -384,9 +512,33 @@
             document.getElementById('wpm-display').textContent = '0';
             document.getElementById('accuracy-display').textContent = '100%';
             document.getElementById('time-display').textContent = '0s';
+            document.getElementById('stress-display').textContent = 'Normal';
+            document.getElementById('stress-display').style.color = '#28a745';
             
             startTest();
         }
+
+        // Initialize webcam when page loads
+        window.addEventListener('DOMContentLoaded', async function() {
+            console.log('Initializing webcam...');
+            const webcamInitialized = await initializeWebcam();
+            if (webcamInitialized) {
+                console.log('Webcam initialized successfully');
+                document.getElementById('stress-display').textContent = 'Ready';
+            } else {
+                console.log('Webcam initialization failed');
+                document.getElementById('stress-display').textContent = 'Camera Unavailable';
+                document.getElementById('stress-display').style.color = '#dc3545';
+            }
+        });
+
+        // Cleanup when page is closed
+        window.addEventListener('beforeunload', function() {
+            cleanup();
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+            }
+        });
     </script>
 </body>
 </html>
