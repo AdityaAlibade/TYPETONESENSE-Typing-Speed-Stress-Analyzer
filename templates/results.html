@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - Typing Speed & Stress Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 90%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .result-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+            transition: transform 0.3s ease;
+        }
+        
+        .result-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .result-value {
+            font-size: 3em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .result-label {
+            color: #333;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+        
+        .result-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+        
+        .stress-result {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-color: #28a745;
+        }
+        
+        .stress-result .result-value {
+            color: #28a745;
+            font-size: 2.2em;
+        }
+        
+        .performance-summary {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .performance-summary h3 {
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .summary-text {
+            color: #666;
+            line-height: 1.6;
+            text-align: center;
+            font-size: 1.1em;
+        }
+        
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+            text-align: center;
+        }
+        
+        .chart-placeholder {
+            height: 200px;
+            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
+                        linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Your Results</h1>
+            <p>Here's how you performed on the typing speed and stress analysis test</p>
+        </div>
+        
+        <div class="results-grid">
+            <div class="result-card">
+                <span class="result-value">{{ session.wpm }}</span>
+                <div class="result-label">Words Per Minute</div>
+                <div class="result-description">
+                    {% if session.wpm < 20 %}
+                        Beginner level - keep practicing!
+                    {% elif session.wpm < 40 %}
+                        Good progress - you're improving!
+                    {% elif session.wpm < 60 %}
+                        Great speed - well done!
+                    {% else %}
+                        Excellent! You're a fast typist!
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="result-card">
+                <span class="result-value">{{ session.accuracy }}%</span>
+                <div class="result-label">Accuracy</div>
+                <div class="result-description">
+                    {% if session.accuracy >= 95 %}
+                        Excellent precision!
+                    {% elif session.accuracy >= 85 %}
+                        Good accuracy!
+                    {% elif session.accuracy >= 75 %}
+                        Room for improvement
+                    {% else %}
+                        Focus on accuracy
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="result-card stress-result">
+                <span class="result-value">{{ session.stress_level }}</span>
+                <div class="result-label">Stress Level</div>
+                <div class="result-description">
+                    {% if session.stress_level == 'Normal' %}
+                        You maintained a calm demeanor
+                    {% elif session.stress_level == 'Tense' %}
+                        Some tension was detected
+                    {% elif session.stress_level == 'Happy' %}
+                        You seemed relaxed and positive
+                    {% else %}
+                        Emotional state analyzed
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="performance-summary">
+            <h3>🎯 Performance Summary</h3>
+            <div class="summary-text">
+                You completed the typing test with <strong>{{ session.wpm }} WPM</strong> and 
+                <strong>{{ session.accuracy }}% accuracy</strong>. During the test, our facial analysis 
+                detected a <strong>{{ session.stress_level }}</strong> stress level. 
+                
+                {% if session.wpm >= 40 and session.accuracy >= 90 %}
+                    Excellent work! Your typing skills are well-developed and you maintained good composure.
+                {% elif session.wpm >= 25 and session.accuracy >= 80 %}
+                    Good performance! Continue practicing to improve both speed and accuracy.
+                {% else %}
+                    Keep practicing! Focus on accuracy first, then gradually increase your speed.
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <h3>📈 Performance Chart</h3>
+            <div class="chart-placeholder">
+                Performance visualization coming soon<br>
+                <small>Future updates will include real-time typing speed graphs</small>
+            </div>
+        </div>
+        
+        <div class="actions">
+            <a href="/" class="btn">Take Another Test</a>
+            <button class="btn btn-secondary" onclick="window.print()">Print Results</button>
+        </div>
+    </div>
+</body>
+</html>

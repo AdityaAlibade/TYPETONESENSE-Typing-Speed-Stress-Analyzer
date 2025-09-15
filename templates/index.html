@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Speed & Stress Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 1200px;
+            width: 90%;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .typing-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .camera-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        #paragraph-display {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 120px;
+            color: #333;
+        }
+        
+        #typing-input {
+            width: 100%;
+            min-height: 120px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 1.2em;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+        
+        #typing-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #camera-feed {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            margin-bottom: 15px;
+        }
+        
+        .stress-indicator {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .stress-level {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Typing Speed & Stress Analyzer</h1>
+            <p>Test your typing speed while we analyze your stress level through facial expressions</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="typing-section">
+                <div id="paragraph-display">
+                    Click "Start Test" to begin your typing speed and stress analysis session.
+                </div>
+                
+                <textarea id="typing-input" placeholder="Your paragraph will appear above. Start typing here when ready..." disabled></textarea>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="wpm-display">0</span>
+                        <span class="stat-label">WPM</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="accuracy-display">100%</span>
+                        <span class="stat-label">Accuracy</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="time-display">0s</span>
+                        <span class="stat-label">Time</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="camera-section">
+                <h3>📹 Stress Monitor</h3>
+                <img id="camera-feed" src="/video_feed" alt="Camera feed for stress analysis">
+                
+                <div class="stress-indicator">
+                    <div>Current Stress Level:</div>
+                    <div class="stress-level" id="stress-display">Normal</div>
+                </div>
+                
+                <p style="font-size: 0.9em; color: #666; margin-top: 15px;">
+                    Your facial expressions are being analyzed to determine stress levels during typing.
+                </p>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="start-btn" onclick="startTest()">Start Test</button>
+            <button class="btn" id="finish-btn" onclick="finishTest()" disabled>Finish Test</button>
+            <button class="btn" id="new-paragraph-btn" onclick="newParagraph()" disabled>New Paragraph</button>
+        </div>
+    </div>
+
+    <script>
+        let testData = {
+            startTime: null,
+            originalText: '',
+            testActive: false,
+            keystrokes: 0,
+            errors: 0
+        };
+
+        let updateInterval;
+
+        async function startTest() {
+            try {
+                const response = await fetch('/get_paragraph');
+                const data = await response.json();
+                
+                testData.originalText = data.paragraph;
+                document.getElementById('paragraph-display').textContent = testData.originalText;
+                
+                const input = document.getElementById('typing-input');
+                input.disabled = false;
+                input.value = '';
+                input.focus();
+                
+                testData.startTime = Date.now();
+                testData.testActive = true;
+                testData.keystrokes = 0;
+                testData.errors = 0;
+                
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('finish-btn').disabled = false;
+                document.getElementById('new-paragraph-btn').disabled = false;
+                
+                updateInterval = setInterval(updateStats, 100);
+                
+                input.addEventListener('input', trackTyping);
+                
+            } catch (error) {
+                console.error('Error starting test:', error);
+                alert('Error starting test. Please try again.');
+            }
+        }
+
+        function trackTyping(event) {
+            if (!testData.testActive) return;
+            
+            testData.keystrokes++;
+            updateStats();
+        }
+
+        function updateStats() {
+            if (!testData.testActive || !testData.startTime) return;
+            
+            const currentTime = Date.now();
+            const elapsed = (currentTime - testData.startTime) / 1000;
+            const typedText = document.getElementById('typing-input').value;
+            
+            // Calculate WPM
+            const wordsTyped = typedText.trim().split(/\s+/).length;
+            const wpm = elapsed > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
+            
+            // Calculate accuracy
+            let correctChars = 0;
+            const minLength = Math.min(typedText.length, testData.originalText.length);
+            
+            for (let i = 0; i < minLength; i++) {
+                if (typedText[i] === testData.originalText[i]) {
+                    correctChars++;
+                }
+            }
+            
+            const accuracy = typedText.length > 0 ? Math.round((correctChars / typedText.length) * 100) : 100;
+            
+            // Update display
+            document.getElementById('wpm-display').textContent = wpm;
+            document.getElementById('accuracy-display').textContent = accuracy + '%';
+            document.getElementById('time-display').textContent = Math.round(elapsed) + 's';
+        }
+
+        async function finishTest() {
+            if (!testData.testActive) return;
+            
+            testData.testActive = false;
+            clearInterval(updateInterval);
+            
+            const typedText = document.getElementById('typing-input').value;
+            const elapsed = (Date.now() - testData.startTime) / 1000;
+            const wordsTyped = typedText.trim().split(/\s+/).length;
+            const wpm = elapsed > 0 ? Math.round((wordsTyped / elapsed) * 60) : 0;
+            
+            let correctChars = 0;
+            const minLength = Math.min(typedText.length, testData.originalText.length);
+            
+            for (let i = 0; i < minLength; i++) {
+                if (typedText[i] === testData.originalText[i]) {
+                    correctChars++;
+                }
+            }
+            
+            const accuracy = typedText.length > 0 ? Math.round((correctChars / typedText.length) * 100) : 100;
+            
+            try {
+                const response = await fetch('/submit_results', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        wpm: wpm,
+                        accuracy: accuracy,
+                        typing_time: elapsed
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.session_id) {
+                    window.location.href = `/results/${result.session_id}`;
+                } else {
+                    alert('Error saving results. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Error submitting results:', error);
+                alert('Error submitting results. Please try again.');
+            }
+        }
+
+        async function newParagraph() {
+            if (testData.testActive) {
+                if (!confirm('This will start a new test. Continue?')) return;
+            }
+            
+            testData.testActive = false;
+            clearInterval(updateInterval);
+            
+            document.getElementById('start-btn').disabled = false;
+            document.getElementById('finish-btn').disabled = true;
+            document.getElementById('new-paragraph-btn').disabled = true;
+            document.getElementById('typing-input').disabled = true;
+            document.getElementById('typing-input').value = '';
+            
+            document.getElementById('wpm-display').textContent = '0';
+            document.getElementById('accuracy-display').textContent = '100%';
+            document.getElementById('time-display').textContent = '0s';
+            
+            startTest();
+        }
+    </script>
+</body>
+</html>
