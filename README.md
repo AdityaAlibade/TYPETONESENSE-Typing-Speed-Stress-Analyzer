@@ -85,7 +85,6 @@ Built using *Flask, **OpenCV, and **Machine Learning, this project combines **be
 👤 *Arbat Pratik*
 👤 *Ghule Pawan*
 
-Guided by: *Prof. S. R. Paralkar*
 📍 JSPM’s Rajarshi Shahu College of Engineering, Pune
 
 ---
