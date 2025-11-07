@@ -1,277 +1,466 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results - Typing Speed & Stress Analyzer</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 800px;
-            width: 90%;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-        
-        .header h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-        
-        .result-card {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            border: 2px solid #e9ecef;
-            transition: transform 0.3s ease;
-        }
-        
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        
-        .result-value {
-            font-size: 3em;
-            font-weight: bold;
-            color: #667eea;
-            margin-bottom: 10px;
-            display: block;
-        }
-        
-        .result-label {
-            color: #333;
-            font-size: 1.2em;
-            font-weight: 600;
-        }
-        
-        .result-description {
-            color: #666;
-            font-size: 0.9em;
-            margin-top: 8px;
-        }
-        
-        .stress-result {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border-color: #28a745;
-        }
-        
-        .stress-result .result-value {
-            color: #28a745;
-            font-size: 2.2em;
-        }
-        
-        .performance-summary {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .performance-summary h3 {
-            color: #333;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .summary-text {
-            color: #666;
-            line-height: 1.6;
-            text-align: center;
-            font-size: 1.1em;
-        }
-        
-        .actions {
-            text-align: center;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            margin: 0 10px;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-        
-        .btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-secondary {
-            background: #6c757d;
-        }
-        
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-        
-        .chart-container {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            border: 2px solid #e9ecef;
-            text-align: center;
-        }
-        
-        .chart-placeholder {
-            height: 200px;
-            background: linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
-                        linear-gradient(-45deg, #f8f9fa 25%, transparent 25%), 
-                        linear-gradient(45deg, transparent 75%, #f8f9fa 75%), 
-                        linear-gradient(-45deg, transparent 75%, #f8f9fa 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-size: 1.1em;
-        }
-        
-        @media (max-width: 768px) {
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .actions {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typing Speed & Stress Analyzer — Results</title>
+  <meta name="description" content="Detailed summary of your typing speed, accuracy, and stress levels with personalized recommendations.">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --primary: #2575fc;
+      --primary-dark: #1e63d0;
+      --muted: #6c757d;
+      --success: #28a745;
+      --shadow: rgba(16, 24, 40, 0.08);
+      --radius: 16px;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color-scheme: light;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: linear-gradient(180deg, #f7f9fc 0%, var(--bg) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 28px 12px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 30px var(--shadow);
+      padding: 32px;
+      box-sizing: border-box;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    header.header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: #0f1724;
+      font-weight: 700;
+    }
+
+    .header p {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* Results Grid */
+    .results-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .result-card {
+      flex: 1 1 300px;
+      background: linear-gradient(145deg, #ffffff, #f9fbff);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 4px 12px rgba(16, 24, 40, 0.04);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .result-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+    }
+
+    .result-value {
+      display: block;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .result-label {
+      margin-top: 8px;
+      font-weight: 600;
+      color: #0f1724;
+      font-size: 1.05rem;
+    }
+
+    .result-description {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .stress-result {
+      background: linear-gradient(135deg, #e8f7ec, #f1fcf3);
+      border-color: rgba(40, 167, 69, 0.15);
+    }
+
+    .stress-result .result-value {
+      color: var(--success);
+    }
+
+    /* Performance Summary */
+    .performance-summary {
+      background: #ffffff;
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+    }
+
+    .performance-summary h3 {
+      margin: 0 0 14px;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #0f1724;
+    }
+
+    .summary-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+    }
+
+    .summary-text {
+      flex: 1 1 55%;
+      color: #111;
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    .summary-text ul {
+      margin-top: 10px;
+      padding-left: 18px;
+    }
+
+    .recommendations {
+      flex: 1 1 40%;
+      background: #f9fbff;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 16px;
+    }
+
+    .recommendations strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #0f1724;
+    }
+
+    .recommendations ol {
+      margin: 0;
+      padding-left: 20px;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .recommendations div {
+      margin-top: 12px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    /* Chart */
+    .chart-container {
+      background: #ffffff;
+      border-radius: var(--radius);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 22px;
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+    }
+
+    .chart-container h3 {
+      color: #0f1724;
+      margin: 0 0 12px;
+      font-size: 1.15rem;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 240px !important;
+      max-height: 340px;
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.25s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--muted);
+    }
+
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .btn-back {
+      background: #00b894;
+    }
+
+    .btn-back:hover {
+      background: #019875;
+      transform: translateY(-2px);
+    }
+
+    /* Accessibility */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    /* Print */
+    @media print {
+      body { background: #fff; }
+      .btn, .actions { display: none; }
+      .container { box-shadow: none; border-radius: 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .summary-section { flex-direction: column; }
+      .result-card { flex: 1 1 100%; }
+      .summary-text, .recommendations { flex: 1 1 100%; }
+      canvas { height: 200px !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Your Results</h1>
-            <p>Here's how you performed on the typing speed and stress analysis test</p>
+  <a class="sr-only" href="#main">Skip to content</a>
+
+  <main id="main" class="container" role="main" aria-labelledby="results-heading">
+    <header class="header" role="banner">
+      <h1 id="results-heading">Your Typing Test Results</h1>
+      <p>Summary of your typing speed, accuracy, and stress level with insights.</p>
+    </header>
+
+    <section class="results-grid" aria-label="Key results">
+      <!-- WPM -->
+      <article class="result-card" aria-labelledby="speed-label">
+        <span class="result-value">{{ session.wpm | default(0) | round(0) }}</span>
+        <div class="result-label" id="speed-label">Words Per Minute</div>
+        <div class="result-description">
+          {% set wpm = session.wpm | default(0) %}
+          {% if wpm < 20 %}
+            Beginner level — keep practicing.
+          {% elif wpm < 40 %}
+            Good progress — you're improving.
+          {% elif wpm < 60 %}
+            Great speed — well done.
+          {% else %}
+            Excellent — you're a fast typist!
+          {% endif %}
         </div>
-        
-        <div class="results-grid">
-            <div class="result-card">
-                <span class="result-value">{{ session.wpm }}</span>
-                <div class="result-label">Words Per Minute</div>
-                <div class="result-description">
-                    {% if session.wpm < 20 %}
-                        Beginner level - keep practicing!
-                    {% elif session.wpm < 40 %}
-                        Good progress - you're improving!
-                    {% elif session.wpm < 60 %}
-                        Great speed - well done!
-                    {% else %}
-                        Excellent! You're a fast typist!
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="result-card">
-                <span class="result-value">{{ session.accuracy }}%</span>
-                <div class="result-label">Accuracy</div>
-                <div class="result-description">
-                    {% if session.accuracy >= 95 %}
-                        Excellent precision!
-                    {% elif session.accuracy >= 85 %}
-                        Good accuracy!
-                    {% elif session.accuracy >= 75 %}
-                        Room for improvement
-                    {% else %}
-                        Focus on accuracy
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="result-card stress-result">
-                <span class="result-value">{{ session.stress_level }}</span>
-                <div class="result-label">Stress Level</div>
-                <div class="result-description">
-                    {% if session.stress_level == 'Normal' %}
-                        You maintained a calm demeanor
-                    {% elif session.stress_level == 'Tense' %}
-                        Some tension was detected
-                    {% elif session.stress_level == 'Happy' %}
-                        You seemed relaxed and positive
-                    {% else %}
-                        Emotional state analyzed
-                    {% endif %}
-                </div>
-            </div>
+      </article>
+
+      <!-- Accuracy -->
+      <article class="result-card" aria-labelledby="accuracy-label">
+        <span class="result-value">{{ session.accuracy | default(0) | round(0) }}%</span>
+        <div class="result-label" id="accuracy-label">Accuracy</div>
+        <div class="result-description">
+          {% set acc = session.accuracy | default(0) %}
+          {% if acc >= 95 %}
+            Excellent precision.
+          {% elif acc >= 85 %}
+            Good accuracy.
+          {% elif acc >= 75 %}
+            Room for improvement.
+          {% else %}
+            Focus on accuracy.
+          {% endif %}
         </div>
-        
-        <div class="performance-summary">
-            <h3>🎯 Performance Summary</h3>
-            <div class="summary-text">
-                You completed the typing test with <strong>{{ session.wpm }} WPM</strong> and 
-                <strong>{{ session.accuracy }}% accuracy</strong>. During the test, our facial analysis 
-                detected a <strong>{{ session.stress_level }}</strong> stress level. 
-                
-                {% if session.wpm >= 40 and session.accuracy >= 90 %}
-                    Excellent work! Your typing skills are well-developed and you maintained good composure.
-                {% elif session.wpm >= 25 and session.accuracy >= 80 %}
-                    Good performance! Continue practicing to improve both speed and accuracy.
-                {% else %}
-                    Keep practicing! Focus on accuracy first, then gradually increase your speed.
-                {% endif %}
-            </div>
+      </article>
+
+      <!-- Stress -->
+      <article class="result-card stress-result" aria-labelledby="stress-label">
+        <span class="result-value">{{ session.stress_level | default('Unknown') }}</span>
+        <div class="result-label" id="stress-label">Stress Level</div>
+        <div class="result-description">
+          {% set sl = session.stress_level | default('Unknown') %}
+          {% if sl == 'Normal' %}
+            You maintained a calm demeanor.
+          {% elif sl == 'Tense' %}
+            Some tension was detected.
+          {% elif sl == 'Happy' %}
+            You seemed relaxed and positive.
+          {% elif sl == 'Unknown' %}
+            Insufficient data to determine stress.
+          {% else %}
+            Emotional state analyzed.
+          {% endif %}
         </div>
-        
-        <div class="chart-container">
-            <h3>📈 Performance Chart</h3>
-            <div class="chart-placeholder">
-                Performance visualization coming soon<br>
-                <small>Future updates will include real-time typing speed graphs</small>
-            </div>
+      </article>
+    </section>
+
+    <!-- Summary -->
+    <section class="performance-summary" aria-labelledby="summary-heading">
+      <h3 id="summary-heading">Performance Summary</h3>
+      <div class="summary-section">
+        <div class="summary-text">
+          You completed the test with
+          <strong>{{ session.wpm | default(0) | round(1) }} WPM</strong>,
+          <strong>{{ session.accuracy | default(0) | round(1) }}% accuracy</strong>,
+          in <strong>{{ session.typing_time | default(0) | round(1) }}s</strong>.
+
+          <ul>
+            <li><strong>Stress Level:</strong> {{ session.stress_level | default('Unknown') }}</li>
+            {% if stress_summary %}
+              <li><strong>Stress Samples:</strong>
+                <ul>
+                  {% for label, count in stress_summary.items() %}
+                    <li>{{ label }}: {{ count }}</li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
+          </ul>
         </div>
-        
-        <div class="actions">
-            <a href="/" class="btn">Take Another Test</a>
-            <button class="btn btn-secondary" onclick="window.print()">Print Results</button>
-        </div>
+
+        <aside class="recommendations">
+          <strong>Personalized Recommendations</strong>
+          <ol>
+            {% set w = session.wpm | default(0) %}
+            {% if w < 20 %}
+              <li>Practice touch-typing 10–15 minutes daily.</li>
+              <li>Focus on accuracy before speed.</li>
+            {% elif w < 40 %}
+              <li>Alternate speed and accuracy drills.</li>
+              <li>Try timed tests to build endurance.</li>
+            {% else %}
+              <li>Mix drills to maintain speed & accuracy.</li>
+              <li>Maintain ergonomic posture and regular breaks.</li>
+            {% endif %}
+          </ol>
+
+          <div>
+            {% set s = session.stress_level | default('Unknown') %}
+            {% if s in ['Tense','Stressed','Angry','Nervous'] %}
+              Try short relaxation breaks every 5–10 minutes: deep breathing, stretching, or a quick walk.
+            {% elif s in ['Happy','Calm','Focused'] %}
+              Maintain your setup — lighting & posture look optimal.
+            {% else %}
+              Consider adjusting lighting or environment to stay comfortable.
+            {% endif %}
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section class="chart-container" aria-labelledby="chart-heading">
+      <h3 id="chart-heading">Typing Performance Chart</h3>
+      <canvas id="performanceChart"></canvas>
+    </section>
+
+    <!-- Actions -->
+    <div class="actions">
+      <a href="{{ url_for('test') }}" class="btn">Take Another Test</a>
+      <button class="btn btn-secondary" onclick="window.print()">Print Results</button>
+      <a href="{{ url_for('index') }}" class="btn btn-back">Back to Home</a>
     </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script defer>
+    (function(){
+      const progressData = ({{ session.progress | tojson | default('null') }}) || [];
+      const labels = progressData.length ? ['Start','25%','50%','75%','End'].slice(0, progressData.length) : [];
+      const ctx = document.getElementById('performanceChart');
+      function createChart(){
+        if (!window.Chart || !ctx) return;
+        new Chart(ctx.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: labels.length ? labels : ['Start','25%','50%','75%','End'],
+            datasets: [{
+              label: 'WPM Over Time',
+              data: progressData.length ? progressData : [0,0,0,0,0],
+              borderColor: getComputedStyle(document.documentElement).getPropertyValue('--primary'),
+              backgroundColor: 'rgba(37,117,252,0.08)',
+              fill: true,
+              tension: 0.35,
+              pointRadius: 3,
+              pointHoverRadius: 5
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              title: { display: true, text: 'Speed Progress During Test', font: { size: 14 } }
+            },
+            scales: {
+              y: { beginAtZero: true, title: { display: true, text: 'WPM' } },
+              x: { title: { display: true, text: 'Progress' } }
+            },
+            elements: { line: { borderWidth: 2 } }
+          }
+        });
+      }
+      if (document.readyState === 'complete') createChart();
+      else window.addEventListener('load', createChart);
+    })();
+  </script>
 </body>
 </html>

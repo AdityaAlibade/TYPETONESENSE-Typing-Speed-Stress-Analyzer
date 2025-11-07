@@ -1,0 +1,183 @@
+/* Results page specific styles */
+
+/* Results Grid */
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.result-card {
+  background: var(--gradient-card);
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  text-align: center;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.result-value {
+  font-size: var(--font-size-xxl);
+  color: var(--color-primary);
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+  display: block;
+}
+
+.result-label {
+  font-size: var(--font-size-lg);
+  color: #222;
+  font-weight: 600;
+}
+
+.result-description {
+  margin-top: var(--space-sm);
+  color: #555;
+  font-size: var(--font-size-sm);
+}
+
+/* Stress Result Card */
+.stress-result {
+  background: var(--gradient-success);
+  border-color: var(--color-success);
+}
+
+.stress-result .result-value {
+  color: var(--color-success);
+}
+
+/* Performance Summary */
+.performance-summary {
+  background: #f9f9f9;
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  border: 1px solid #e0e0e0;
+}
+
+.summary-section {
+  display: grid;
+  grid-template-columns: 1fr minmax(300px, 2fr);
+  gap: var(--space-lg);
+}
+
+.summary-text {
+  color: #444;
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+}
+
+.summary-text ul {
+  margin-top: var(--space-sm);
+  padding-left: var(--space-lg);
+}
+
+.recommendations {
+  background: white;
+  border-radius: var(--radius-sm);
+  border: 1px solid #e9ecef;
+  padding: var(--space-md);
+}
+
+.recommendations strong {
+  color: #333;
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.recommendations ol {
+  margin: 0;
+  padding-left: var(--space-lg);
+  color: #555;
+  font-size: var(--font-size-sm);
+}
+
+.recommendations div {
+  margin-top: var(--space-sm);
+  font-size: var(--font-size-sm);
+  color: #666;
+}
+
+/* Chart Container */
+.chart-container {
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid #e9ecef;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.chart-container h3 {
+  color: #333;
+  margin-bottom: var(--space-sm);
+}
+
+canvas#performanceChart {
+  width: 100% !important;
+  max-height: 250px !important;
+  margin: 0 auto;
+}
+
+/* Action Buttons */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-md);
+}
+
+/* Print Optimizations */
+@media print {
+  .result-card,
+  .performance-summary,
+  .chart-container {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  .actions {
+    display: none;
+  }
+  
+  body {
+    background: none;
+    color: black;
+  }
+  
+  .result-value,
+  .result-label {
+    color: black !important;
+  }
+  
+  .container {
+    max-width: none;
+    margin: 0;
+    padding: var(--space-md);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .summary-section {
+    grid-template-columns: 1fr;
+  }
+  
+  .result-card {
+    min-width: 100%;
+  }
+  
+  .actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+}

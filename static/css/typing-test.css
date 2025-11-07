@@ -1,0 +1,281 @@
+/* Component-specific styles that extend theme.css */
+
+/* Layout & Typography */
+.text-center { text-align: center; }
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-primary-600), var(--color-primary-400));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mb-2 { margin-bottom: var(--spacing-2); }
+.mb-4 { margin-bottom: var(--spacing-4); }
+.mb-8 { margin-bottom: var(--spacing-8); }
+.mt-2 { margin-top: var(--spacing-2); }
+.mt-4 { margin-top: var(--spacing-4); }
+.mt-8 { margin-top: var(--spacing-8); }
+
+.text-sm { font-size: var(--font-size-sm); }
+.text-xs { font-size: var(--font-size-xs); }
+.text-lg { font-size: var(--font-size-lg); }
+
+.text-gray-500 { color: var(--color-gray-500); }
+.text-gray-600 { color: var(--color-gray-600); }
+.text-gray-700 { color: var(--color-gray-700); }
+.text-gray-800 { color: var(--color-gray-800); }
+
+.font-semibold { font-weight: 600; }
+.leading-relaxed { line-height: var(--line-height-relaxed); }
+
+/* Typing Test Components */
+.typing-card {
+  background-color: white;
+  padding: var(--spacing-6);
+}
+
+#paragraph-display {
+  min-height: 120px;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-gray-800);
+  font-family: var(--font-family);
+}
+
+.typing-input-card {
+  background-color: white;
+  padding: var(--spacing-4);
+}
+
+#typing-input {
+  width: 100%;
+  min-height: 140px;
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  border-color: var(--color-gray-200);
+  background-color: var(--color-gray-50);
+  transition: var(--transition-all);
+}
+
+#typing-input:focus {
+  background-color: white;
+  border-color: var(--color-primary-500);
+  box-shadow: var(--ring-offset-shadow), var(--ring-shadow);
+}
+
+#typing-input:disabled {
+  background-color: var(--color-gray-100);
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-6);
+}
+
+.stat-card {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-4);
+  text-align: center;
+  border: 1px solid var(--color-gray-200);
+  transition: var(--transition-all);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-primary-500);
+  line-height: var(--line-height-none);
+  margin-bottom: var(--spacing-2);
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+}
+
+/* Camera Section */
+.camera-card {
+  background-color: white;
+  padding: var(--spacing-6);
+}
+
+.camera-container {
+  position: relative;
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background-color: var(--color-gray-900);
+}
+
+#camera-feed {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  background-color: var(--color-gray-900);
+}
+
+.stress-indicator {
+  background-color: var(--color-gray-50);
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-4);
+  border: 1px solid var(--color-gray-200);
+}
+
+.stress-level {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  margin-top: var(--spacing-1);
+  transition: var(--transition-colors);
+}
+
+/* Controls */
+.controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-4);
+  margin-top: var(--spacing-8);
+}
+
+/* Keyboard Shortcuts */
+.keyboard-shortcuts {
+  max-width: 600px;
+  margin: var(--spacing-8) auto 0;
+}
+
+kbd {
+  display: inline-block;
+  padding: var(--spacing-1) var(--spacing-2);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  line-height: var(--line-height-none);
+  color: var(--color-gray-700);
+  vertical-align: middle;
+  background-color: var(--color-gray-100);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  box-shadow: inset 0 -1px 0 var(--color-gray-300);
+}
+
+/* Stress Level Colors */
+.stress-level[data-level="happy"],
+.stress-level[data-level="calm"],
+.stress-level[data-level="chill"] {
+  color: var(--color-success-500);
+}
+
+.stress-level[data-level="tense"],
+.stress-level[data-level="stressed"],
+.stress-level[data-level="angry"] {
+  color: var(--color-error-500);
+}
+
+.stress-level[data-level="focused"] {
+  color: var(--color-primary-500);
+}
+
+.stress-level[data-level="tired"],
+.stress-level[data-level="sad"] {
+  color: var(--color-warning-500);
+}
+
+/* Loading States */
+.loading {
+  position: relative;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-gray-50);
+  opacity: 0.7;
+  border-radius: inherit;
+}
+
+.loading::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: -0.75rem 0 0 -0.75rem;
+  border: 2px solid var(--color-primary-200);
+  border-top-color: var(--color-primary-500);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  z-index: 1;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Grid & Responsive */
+.grid { display: grid; }
+.gap-6 { gap: var(--spacing-6); }
+.grid-cols-1 { grid-template-columns: 1fr; }
+
+@media (min-width: 1024px) {
+  .lg\:col-span-8 { grid-column: span 8 / span 8; }
+  .lg\:col-span-4 { grid-column: span 4 / span 4; }
+  .lg\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+}
+
+/* Utilities */
+.hidden { display: none !important; }
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Focus visible utility */
+.focus\:not-sr-only:focus {
+  position: fixed;
+  top: var(--spacing-4);
+  left: var(--spacing-4);
+  width: auto;
+  height: auto;
+  padding: var(--spacing-2) var(--spacing-4);
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-700);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
+
+/* Print styles */
+@media print {
+  .controls-container,
+  .camera-card,
+  .keyboard-shortcuts {
+    display: none !important;
+  }
+}

@@ -1,0 +1,115 @@
+import pytest
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+import time
+
+@pytest.fixture
+def driver():
+    """Set up Chrome WebDriver for testing"""
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')  # Run in headless mode
+    driver = webdriver.Chrome(options=options)
+    yield driver
+    driver.quit()
+
+def test_home_page(driver):
+    """Test the home page layout and navigation"""
+    driver.get("http://localhost:5000")
+    
+    # Check navigation links
+    nav_links = driver.find_elements(By.CLASS_NAME, "nav-link")
+    assert len(nav_links) == 4, "Should have 4 navigation links"
+    
+    # Verify hero section
+    hero_title = driver.find_element(By.CLASS_NAME, "hero-title")
+    assert "Typing Speed" in hero_title.text
+    
+    # Check CTA button
+    cta_button = driver.find_element(By.CLASS_NAME, "cta-button")
+    assert "Start Test" in cta_button.text
+    assert cta_button.get_attribute("href").endswith("/test")
+
+def test_typing_test(driver):
+    """Test the typing test functionality"""
+    driver.get("http://localhost:5000/test")
+    
+    # Wait for page to load
+    wait = WebDriverWait(driver, 10)
+    start_btn = wait.until(EC.presence_of_element_located((By.ID, "start-btn")))
+    
+        # Scroll button into view
+        driver.execute_script("arguments[0].scrollIntoView(true);", start_btn)
+        time.sleep(1)  # Give time for scroll to complete
+   
+    # Initial state check
+    typing_input = driver.find_element(By.ID, "typing-input")
+    assert typing_input.get_attribute("disabled"), "Input should be disabled initially"
+    
+    # Start test
+    start_btn.click()
+    
+    try:
+        # Wait for input to be enabled
+        wait.until_not(EC.element_to_be_selected((By.ID, "typing-input")))
+        
+        # Check UI updates
+        paragraph = driver.find_element(By.ID, "paragraph-display").text
+        assert len(paragraph) > 0, "Should have loaded a paragraph"
+        
+        # Type some text
+        typing_input = driver.find_element(By.ID, "typing-input")
+        typing_input.send_keys("Test typing")
+        
+        # Check stats update
+        time.sleep(1)  # Wait for stats to update
+        wpm = driver.find_element(By.ID, "wpm-display").text
+        assert int(wpm) >= 0, "WPM should be a number"
+        
+        # Check progress bar
+        progress_bar = driver.find_element(By.CLASS_NAME, "test-progress-bar")
+        assert progress_bar.is_displayed(), "Progress bar should be visible"
+        
+    except TimeoutException:
+        pytest.fail("Test elements did not update as expected")
+
+def test_camera_handling(driver):
+    """Test camera permission handling"""
+    driver.get("http://localhost:5000/test")
+    
+    # Camera should show fallback message if not available
+    wait = WebDriverWait(driver, 10)
+    stress_display = wait.until(EC.presence_of_element_located((By.ID, "stress-display")))
+    
+    # In headless mode, camera will be unavailable
+        assert "Camera Unavailable" in stress_display.text, "Expected 'Camera Unavailable' message"
+
+def test_results_page(driver):
+    """Test the results page display"""
+    # First create a test session
+    driver.get("http://localhost:5000/test")
+    
+    wait = WebDriverWait(driver, 10)
+    start_btn = wait.until(EC.presence_of_element_located((By.ID, "start-btn")))
+        # Scroll button into view
+        driver.execute_script("arguments[0].scrollIntoView(true);", start_btn)
+        time.sleep(1)  # Give time for scroll to complete
+   
+    start_btn.click()
+    
+    # Type some text
+    typing_input = wait.until(EC.element_to_be_clickable((By.ID, "typing-input")))
+    typing_input.send_keys("This is a test of the typing system.")
+    
+    # Finish test
+    finish_btn = driver.find_element(By.ID, "finish-btn")
+    finish_btn.click()
+    
+    # Should redirect to results page
+    wait.until(EC.url_contains("/results/"))
+    
+    # Check results display
+    stats = driver.find_elements(By.CLASS_NAME, "stat-value")
+    assert len(stats) > 0, "Should show test statistics"

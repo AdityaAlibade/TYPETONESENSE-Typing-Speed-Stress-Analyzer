@@ -1,0 +1,231 @@
+/* CSS Variables */
+:root {
+  /* Colors */
+  --color-primary: #2575fc;
+  --color-primary-dark: #1a5dd8;
+  --color-primary-light: rgba(37,117,252,0.1);
+  --color-secondary: #6c757d;
+  --color-secondary-dark: #5a6268;
+  --color-success: #28a745;
+  --color-success-light: #c3e6cb;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
+  --color-info: #17a2b8;
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  --gradient-card: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+  --gradient-success: linear-gradient(135deg, #d4edda, #c3e6cb);
+  
+  /* Spacing */
+  --space-xs: 5px;
+  --space-sm: 10px;
+  --space-md: 15px;
+  --space-lg: 20px;
+  --space-xl: 30px;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-pill: 30px;
+  
+  /* Typography */
+  --font-primary: "Poppins", system-ui, -apple-system, sans-serif;
+  --font-size-sm: 0.95em;
+  --font-size-base: 1em;
+  --font-size-lg: 1.2em;
+  --font-size-xl: 1.5em;
+  --font-size-xxl: 2.5em;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-md: 0 8px 25px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.15);
+  --shadow-btn: 0 8px 20px rgba(37,117,252,0.4);
+  
+  /* Z-index */
+  --z-overlay: 100;
+  --z-modal: 200;
+  --z-tooltip: 300;
+}
+
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  scroll-behavior: smooth;
+  font-family: var(--font-primary);
+}
+
+body {
+  background: var(--gradient-primary);
+  color: #333;
+  line-height: 1.6;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+  line-height: 1.2;
+  margin-bottom: var(--space-md);
+}
+
+p {
+  margin-bottom: var(--space-md);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn:disabled {
+  background: var(--color-secondary);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-secondary {
+  background: var(--color-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--color-secondary-dark);
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-xl);
+}
+
+/* Cards */
+.card {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: var(--space-xl);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Grid & Flexbox Utilities */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-sm { gap: var(--space-sm); }
+.gap-md { gap: var(--space-md); }
+.gap-lg { gap: var(--space-lg); }
+
+.grid {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Responsive Utilities */
+.hidden-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hidden-mobile {
+    display: block;
+  }
+  
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: none;
+  }
+  
+  .container {
+    box-shadow: none;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+}

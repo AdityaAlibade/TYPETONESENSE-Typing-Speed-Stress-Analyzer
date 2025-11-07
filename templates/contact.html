@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | TypeToneSense</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #0d1117;
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 15, 19, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #00bfff;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+        }
+
+        .nav-link {
+            color: #ffffffcc;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover, .active {
+            color: #00bfff;
+            transform: scale(1.08);
+        }
+
+        /* Header */
+        .contact-header {
+            text-align: center;
+            padding-top: 8rem;
+            padding-bottom: 3rem;
+            animation: fadeInDown 1s ease;
+        }
+
+        .contact-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #63e6be;
+            text-shadow: 0 0 12px rgba(99,230,190,0.4);
+        }
+
+        .contact-header p {
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+
+        /* Main Container */
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto 5rem;
+            padding: 2rem;
+            animation: fadeInUp 1.3s ease;
+        }
+
+        /* Contact Info Card */
+        .contact-card, .form-card {
+            background: linear-gradient(145deg, #141a20, #0a0f13);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(0,191,255,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .contact-card:hover, .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0,191,255,0.3);
+        }
+
+        .contact-card h2, .form-card h2 {
+            color: #00bfff;
+            margin-bottom: 1rem;
+        }
+
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-list li {
+            margin-bottom: 1.2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #63e6be;
+        }
+
+        .contact-email {
+            color: #00bfff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-email:hover {
+            color: #63e6be;
+        }
+
+        /* Contact Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            background: #0d1117;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #00bfff;
+            box-shadow: 0 0 12px rgba(0,191,255,0.3);
+            outline: none;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #00bfff, #63e6be);
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(90deg, #63e6be, #00bfff);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,191,255,0.4);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: #0a0f13;
+            color: #bbb;
+            font-size: 0.9rem;
+            border-top: 1px solid #1e293b;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {opacity: 0; transform: translateY(40px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        @keyframes fadeInDown {
+            from {opacity: 0; transform: translateY(-40px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .contact-header h1 {
+                font-size: 2.2rem;
+            }
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">TypeToneSense</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/about" class="nav-link">About Us</a>
+                <a href="/contact" class="nav-link active">Contact Us</a>
+                <a href="/test" class="nav-link">Test</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="contact-header">
+        <h1>Contact Us</h1>
+        <p>Have questions or feedback? We'd love to hear from you.</p>
+    </section>
+
+    <!-- Main Content -->
+    <section class="contact-container">
+        <!-- Contact Info -->
+        <div class="contact-card">
+            <h2>Our Team</h2>
+            <ul class="contact-list">
+                <li>
+                    <span class="contact-name">Alibade Aditya</span><br>
+                    <a href="mailto:alibadeaditya@gmail.com" class="contact-email">alibadeaditya@gmail.com</a>
+                </li>
+                <li>
+                    <span class="contact-name">Pratik Arbat</span><br>
+                    <a href="mailto:pratarbat@gmail.com" class="contact-email">pratarbat@gmail.com</a>
+                </li>
+                <li>
+                    <span class="contact-name">Ghule Pawan</span><br>
+                    <a href="mailto:pawanshivajighule25@gmail.com" class="contact-email">pawanshivajighule25@gmail.com</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="form-card">
+            <h2>Send a Message</h2>
+            <form>
+                <div class="form-group">
+                    <input type="text" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <textarea rows="5" placeholder="Your Message" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 TypeToneSense. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

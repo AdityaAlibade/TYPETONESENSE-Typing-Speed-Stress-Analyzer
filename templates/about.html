@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TypeToneSense - Typing Speed & Stress Analysis</title>
+    <title>About Us - TypeToneSense</title>
 
-    <!-- Fonts & Styles -->
+    <!-- CSS Files -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* Global Styles */
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            height: 100%;
             font-family: 'Poppins', sans-serif;
             background-color: #0d1117;
             color: #fff;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
         }
 
@@ -49,11 +54,6 @@
             font-size: 1.5rem;
             color: #00bfff;
             text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .nav-logo:hover {
-            color: #63e6be;
         }
 
         .nav-links {
@@ -78,61 +78,73 @@
             font-weight: 600;
         }
 
-        /* Hero Section */
-        .hero-section {
-            background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.7)), 
-                url('{{ url_for("static", filename="images/typing-bg.jpg") }}');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        /* About Section */
+        .about-section {
+            flex: 1;
+            padding-top: 8rem;
+            padding-bottom: 3rem;
             text-align: center;
-            padding: 0 1rem;
+            animation: fadeInUp 1.2s ease;
         }
 
-        .hero-content {
-            max-width: 700px;
-            animation: fadeInUp 1.5s ease;
-        }
-
-        .hero-title {
-            font-size: 2.8rem;
+        .section-title {
+            font-size: 2.5rem;
             font-weight: 700;
-            line-height: 1.3;
-            margin-bottom: 1rem;
             color: #63e6be;
+            margin-bottom: 2rem;
             text-shadow: 0 0 10px rgba(99,230,190,0.4);
         }
 
-        .hero-description {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            color: #ffffffcc;
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
         }
 
-        .cta-button {
-            padding: 15px 35px;
-            font-size: 1.1rem;
-            background: linear-gradient(90deg, #00bfff, #63e6be);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,191,255,0.4);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(90deg, #63e6be, #00bfff);
-            box-shadow: 0 6px 20px rgba(0,191,255,0.6);
-        }
-
-        /* Floating animation */
-        .hero-content {
+        .team-card {
+            background: linear-gradient(145deg, #141a20, #0a0f13);
+            border-radius: 15px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(0,191,255,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            max-width: 300px;
             animation: floatUp 3s ease-in-out infinite alternate;
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 25px rgba(0,191,255,0.3);
+        }
+
+        .profile-image img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            border: 3px solid #00bfff;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+            object-fit: cover;
+        }
+
+        .team-card:hover .profile-image img {
+            transform: scale(1.1);
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #63e6be;
+            margin-bottom: 0.5rem;
+        }
+
+        .member-description {
+            color: #b8c2cc;
+            font-size: 0.95rem;
         }
 
         /* Footer */
@@ -143,9 +155,10 @@
             color: #bbb;
             font-size: 0.9rem;
             border-top: 1px solid #1e293b;
+            margin-top: auto;
         }
 
-        /* Keyframes */
+        /* Animations */
         @keyframes fadeInUp {
             from {opacity: 0; transform: translateY(40px);}
             to {opacity: 1; transform: translateY(0);}
@@ -161,41 +174,52 @@
             100% { transform: translateY(-10px); }
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .hero-title {
+            .section-title {
                 font-size: 2rem;
-            }
-            .cta-button {
-                font-size: 1rem;
-                padding: 12px 25px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
             <a href="/" class="nav-logo">TypeToneSense</a>
             <div class="nav-links">
-                <a href="/" class="nav-link active">Home</a>
-                <a href="/about" class="nav-link">About Us</a>
-                <a href="/contact" class="nav-link">Contact Us</a>
+                <a href="/" class="nav-link">Home</a>
+                <a href="/about" class="nav-link active">About</a>
+                <a href="/contact" class="nav-link">Contact</a>
                 <a href="/test" class="nav-link">Test</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <main class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">Discover Your Typing Speed & Stress Level</h1>
-            <p class="hero-description">
-                Take our advanced typing test that not only measures your speed but also detects stress 
-                through real-time behavior and analysis — powered by AI.
-            </p>
-            <a href="/test" class="cta-button">Start Test</a>
+    <!-- About Section -->
+    <main class="about-section">
+        <h1 class="section-title">Meet Our Team</h1>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename='Passport_photo.JPG') }}" alt="Alibade Aditya">
+                </div>
+                <h3 class="member-name">Alibade Aditya</h3>
+                <p class="member-description">Project Lead & Developer</p>
+            </div>
+            <div class="team-card">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename='Pratik.JPG') }}" alt="Pratik Arbat">
+                </div>
+                <h3 class="member-name">Pratik Arbat</h3>
+                <p class="member-description">Python Developer</p>
+            </div>
+            <div class="team-card">
+                <div class="profile-image">
+                    <img src="{{ url_for('static', filename='Pawan_Ghule.JPG') }}" alt="Ghule Pawan">
+                </div>
+                <h3 class="member-name">Ghule Pawan</h3>
+                <p class="member-description">Software Engineer</p>
+            </div>
         </div>
     </main>
 

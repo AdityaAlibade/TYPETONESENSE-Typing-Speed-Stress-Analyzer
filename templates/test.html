@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Test your typing speed and monitor stress levels in real-time with our typing speed analyzer and stress detection system." />
+    <title>Typing Test - TypeToneSense</title>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    
+    <!-- Theme and Component Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/typing-test.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}" />
+
+    <style>
+        /* ===== Modern Navigation Bar Styling ===== */
+        .navbar {
+            width: 100%;
+            background: linear-gradient(90deg, #4a148c, #6a11cb);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-logo {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            color: #ffd54f;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #fff;
+        }
+
+        .nav-link.active {
+            color: #ffd54f;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background-color: #ffd54f;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip Link for Keyboard Users -->
+    <a href="#main-content" class="sr-only focus:not-sr-only">Skip to main content</a>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">TypeToneSense</a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/about" class="nav-link">About</a>
+                <a href="/contact" class="nav-link">Contact</a>
+                <a href="/test" class="nav-link active">Test</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main-content" class="container animate-fade-in">
+        <header class="text-center mb-8">
+            <h1 class="text-gradient mb-2">🎯 Typing Speed & Stress Analyzer</h1>
+            <p class="text-gray-600">Test your typing speed while we analyze your stress level through facial expressions.</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Left Typing Section -->
+            <section class="lg:col-span-8" aria-labelledby="typing-section-title">
+                <h2 id="typing-section-title" class="sr-only">Typing Test Area</h2>
+                
+                <div class="card typing-card mb-4" role="region" aria-labelledby="paragraph-title">
+                    <h3 id="paragraph-title" class="text-lg font-semibold mb-2">Sample Text</h3>
+                    <div id="paragraph-display" class="text-gray-800 leading-relaxed"
+                         role="textbox" aria-label="Text to type">
+                        Click "Start Test" to begin your typing speed and stress analysis session.
+                    </div>
+                </div>
+
+                <div class="card typing-input-card mb-4">
+                    <textarea id="typing-input" 
+                        class="form-control font-mono"
+                        placeholder="Start typing here once the test begins..."
+                        disabled
+                        aria-label="Typing input area"
+                        rows="5"></textarea>
+                </div>
+
+                <div class="stats-grid" role="group" aria-label="Typing statistics">
+                    <div class="stat-card">
+                        <div class="stat-value" id="wpm-display" aria-live="polite">0</div>
+                        <div class="stat-label">Words per Minute</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="accuracy-display" aria-live="polite">100%</div>
+                        <div class="stat-label">Accuracy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="time-display" aria-live="off">0s</div>
+                        <div class="stat-label">Time Elapsed</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Camera Section -->
+            <section class="lg:col-span-4" aria-labelledby="stress-monitor-title">
+                <div class="card camera-card">
+                    <h2 id="stress-monitor-title" class="text-lg font-semibold mb-4">📹 Stress Monitor</h2>
+                    
+                    <div class="camera-container">
+                        <video id="camera-feed" 
+                            autoplay muted playsinline 
+                            aria-label="Camera feed for stress monitoring"
+                            class="rounded-lg shadow-inner"></video>
+                        <canvas id="capture-canvas" class="hidden" aria-hidden="true"></canvas>
+                    </div>
+
+                    <div class="stress-indicator mt-4" role="status">
+                        <div class="text-sm text-gray-600">Current Stress Level:</div>
+                        <div class="stress-level" 
+                             id="stress-display" 
+                             data-level="normal"
+                             aria-live="polite">Normal</div>
+                    </div>
+
+                    <p class="text-sm text-gray-500 mt-4">
+                        Your facial expressions are being analyzed to determine stress levels during typing.
+                        <span class="block mt-2 text-xs">💡 Ensure good lighting and face the camera directly.</span>
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls-container" role="group" aria-label="Test controls">
+            <button class="btn btn-primary relative" 
+                    id="start-btn" 
+                    type="button"
+                    aria-label="Start typing test"
+                    data-shortcut="Alt+S"
+                    title="Shortcut: Alt+S">
+                <span class="button-content">Start Test</span>
+            </button>
+            <button class="btn btn-secondary relative" 
+                    id="finish-btn" 
+                    type="button"
+                    disabled
+                    aria-label="Finish current test"
+                    data-shortcut="Alt+F"
+                    title="Shortcut: Alt+F">
+                <span class="button-content">Finish Test</span>
+            </button>
+            <button class="btn btn-secondary relative" 
+                    id="new-paragraph-btn" 
+                    type="button"
+                    disabled
+                    aria-label="Get new paragraph"
+                    data-shortcut="Alt+N"
+                    title="Shortcut: Alt+N">
+                <span class="button-content">New Paragraph</span>
+            </button>
+        </div>
+
+        <!-- Keyboard Shortcuts Help -->
+        <div class="keyboard-shortcuts text-center mt-8 text-sm text-gray-500">
+            <details>
+                <summary class="cursor-pointer hover:text-gray-700">Keyboard Shortcuts</summary>
+                <div class="mt-2 grid gap-2 text-left max-w-md mx-auto p-4 bg-gray-50 rounded-lg">
+                    <div><kbd>Alt + S</kbd> - Start Test</div>
+                    <div><kbd>Alt + F</kbd> - Finish Test</div>
+                    <div><kbd>Alt + N</kbd> - New Paragraph</div>
+                    <div><kbd>Tab</kbd> - Navigate between elements</div>
+                    <div><kbd>Escape</kbd> - Cancel current test</div>
+                </div>
+            </details>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 TypeToneSense. All rights reserved.</p>
+    </footer>
+
+    <!-- Load the typing test script as a module -->
+    <script type="module" defer src="/static/js/typing-test.js"></script>
+</body>
+</html>

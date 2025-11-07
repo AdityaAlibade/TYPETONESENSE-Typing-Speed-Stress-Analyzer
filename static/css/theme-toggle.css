@@ -1,0 +1,157 @@
+/* Theme Toggle Styles */
+:root {
+  /* Light theme colors (default) */
+  --bg-primary: #0d1117;
+  --bg-secondary: #141a20;
+  --bg-tertiary: #0a0f13;
+  --text-primary: #ffffff;
+  --text-secondary: #ffffffcc;
+  --text-muted: #b8c2cc;
+  --accent-primary: #00bfff;
+  --accent-secondary: #63e6be;
+  --navbar-bg: rgba(0, 0, 0, 0.7);
+  --card-bg: linear-gradient(145deg, #141a20, #0a0f13);
+  --border-color: #1e293b;
+  --shadow-color: rgba(0, 191, 255, 0.15);
+}
+
+/* Light mode theme */
+body.light-mode {
+  --bg-primary: #f4f6fb;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #0f1724;
+  --text-secondary: #374151;
+  --text-muted: #6c757d;
+  --accent-primary: #2575fc;
+  --accent-secondary: #1a5dd8;
+  --navbar-bg: rgba(255, 255, 255, 0.9);
+  --card-bg: linear-gradient(145deg, #ffffff, #f9fbff);
+  --border-color: #e5e7eb;
+  --shadow-color: rgba(37, 117, 252, 0.15);
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  background: transparent;
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.theme-toggle:hover {
+  background: var(--accent-primary);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+/* Icon animation */
+.theme-toggle .icon {
+  transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover .icon {
+  transform: rotate(20deg);
+}
+
+/* Apply theme variables to body and common elements */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Navbar theme support */
+.navbar {
+  background: var(--navbar-bg) !important;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-logo {
+  color: var(--accent-primary) !important;
+}
+
+.nav-link {
+  color: var(--text-secondary) !important;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent-primary) !important;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--bg-tertiary);
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Cards */
+.card,
+.team-card,
+.contact-card,
+.form-card {
+  background: var(--card-bg) !important;
+  box-shadow: 0 0 15px var(--shadow-color) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+/* Form elements for light mode */
+body.light-mode .form-group input,
+body.light-mode .form-group textarea {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+body.light-mode .form-group input:focus,
+body.light-mode .form-group textarea:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(37, 117, 252, 0.3);
+}
+
+/* Text colors */
+body.light-mode h1,
+body.light-mode h2,
+body.light-mode h3,
+body.light-mode h4,
+body.light-mode h5,
+body.light-mode h6,
+body.light-mode .section-title,
+body.light-mode .hero-title {
+  color: var(--accent-secondary) !important;
+}
+
+body.light-mode .hero-description,
+body.light-mode .member-description,
+body.light-mode p {
+  color: var(--text-secondary) !important;
+}
+
+body.light-mode .member-name,
+body.light-mode .contact-name {
+  color: var(--accent-primary) !important;
+}
+
+/* Smooth transition for all themed elements */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Disable transitions during page load */
+.preload * {
+  transition: none !important;
+}
