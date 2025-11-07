@@ -96,4 +96,3 @@ Guided by: *Prof. S. R. Paralkar*
 
 ---
 
-Would you like me to write a *short version (under 80 words)* for the GitHub repository’s About section too (the one shown under the title)?
