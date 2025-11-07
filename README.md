@@ -82,7 +82,7 @@ Built using *Flask, **OpenCV, and **Machine Learning, this project combines **be
 ### 👥 *Developed By*
 
 👤 *Alibade Aditya*
-👤 *Arbat Pratik*
+👤 *Arbat Pratik* ( https://github.com/PawanTheGod )
 👤 *Ghule Pawan*
 
 📍 JSPM’s Rajarshi Shahu College of Engineering, Pune
