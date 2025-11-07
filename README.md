@@ -81,9 +81,9 @@ Built using *Flask, **OpenCV, and **Machine Learning, this project combines **be
 
 ### 👥 *Developed By*
 
-👤 *Alibade Aditya*
-👤 *Arbat Pratik* ( https://github.com/PawanTheGod )
-👤 *Ghule Pawan*
+👤 *Alibade Aditya* ( https://github.com/AdityaAlibade )
+👤 *Arbat Pratik* 
+👤 *Ghule Pawan* ( https://github.com/PawanTheGod )
 
 📍 JSPM’s Rajarshi Shahu College of Engineering, Pune
 
