@@ -18,7 +18,7 @@ TypeToneSense is a Python-based web app that analyzes typing speed, accuracy, an
 
 ### 🚀 *Overview*
 
-*TypeToneSense* is an intelligent web application that measures your typing performance — including *speed (WPM), **accuracy, and **error rate* — while simultaneously monitoring your *stress level* using *facial emotion analysis*.
+*TypeToneSense* is an intelligent web application that measures your typing performance — including *speed (WPM), * *accuracy, and * *error rate* — while simultaneously monitoring your *stress level* using *facial emotion analysis*.
 
 Built using *Flask, **OpenCV, and **Machine Learning, this project combines **behavioral analytics* (typing data) and *emotional analytics* (facial expressions) to give you insights into how stress affects your typing performance.
 
